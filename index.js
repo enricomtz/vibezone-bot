@@ -2,9 +2,6 @@ const {
   Client,
   GatewayIntentBits,
   EmbedBuilder,
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
   Events
 } = require('discord.js');
 
@@ -12,18 +9,12 @@ const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.GuildMembers,
     GatewayIntentBits.MessageContent
   ]
 });
 
-// HIER DEINEN NEUEN TOKEN EINSETZEN
 const TOKEN = process.env.DISCORD_TOKEN;
 
-// Die Rolle, die User nach dem Klick bekommen sollen
-const VERIFY_ROLE_NAME = "Verified";
-
-// Hier deinen direkten Bild-Link einsetzen
 const RULES_IMAGE_URL = "https://cdn.discordapp.com/attachments/1482145039525089350/1483201102064254979/40067a6c-5dd9-408c-9ae7-cfaf57d8fd2e.png?ex=69b9ba2b&is=69b868ab&hm=1c6a104063161e987a722b0145c94bd307dbec0bb368d5ad3c4182075ab4af73&";
 
 client.once(Events.ClientReady, () => {
@@ -65,72 +56,22 @@ client.on('messageCreate', async (message) => {
           `• Warning\n` +
           `• Mute\n` +
           `• Kick\n` +
-          `• Ban\n\n` +
-
-          `✅ Click the button below to verify.`
+          `• Ban`
         )
-        .setFooter({ text: 'VibeZone Verification System' });
+        .setFooter({ text: 'VibeZone Rules' });
 
-      if (RULES_IMAGE_URL !== "HIER_DEIN_BILD_LINK") {
+      if (RULES_IMAGE_URL && RULES_IMAGE_URL !== "HIER_DEIN_BILD_LINK") {
         embed.setImage(RULES_IMAGE_URL);
       }
 
-      const row = new ActionRowBuilder().addComponents(
-        new ButtonBuilder()
-          .setCustomId('verify_button')
-          .setLabel('Verify')
-          .setEmoji('✅')
-          .setStyle(ButtonStyle.Success)
-      );
-
       await message.channel.send({
-        embeds: [embed],
-        components: [row]
+        embeds: [embed]
       });
 
       await message.delete().catch(() => {});
     } catch (error) {
       console.error('Fehler beim Senden der Regeln:', error);
     }
-  }
-});
-
-client.on('interactionCreate', async (interaction) => {
-  if (!interaction.isButton()) return;
-  if (interaction.customId !== 'verify_button') return;
-
-  try {
-    const role = interaction.guild.roles.cache.find(
-      (r) => r.name === VERIFY_ROLE_NAME
-    );
-
-    if (!role) {
-      return await interaction.reply({
-        content: `❌ Role "${VERIFY_ROLE_NAME}" not found.`,
-        ephemeral: true
-      });
-    }
-
-    if (interaction.member.roles.cache.has(role.id)) {
-      return await interaction.reply({
-        content: '✅ You are already verified.',
-        ephemeral: true
-      });
-    }
-
-    await interaction.member.roles.add(role);
-
-    await interaction.reply({
-      content: '✅ You have been verified and received access to the server.',
-      ephemeral: true
-    });
-  } catch (error) {
-    console.error('Fehler beim Verifizieren:', error);
-
-    await interaction.reply({
-      content: '❌ Verification failed. Please contact staff.',
-      ephemeral: true
-    }).catch(() => {});
   }
 });
 
