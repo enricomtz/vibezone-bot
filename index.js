@@ -21,7 +21,7 @@ const client = new Client({
 const TOKEN = process.env.DISCORD_TOKEN;
 
 // Bild
-const RULES_IMAGE_URL = "https://cdn.discordapp.com/attachments/1482145039525089350/1483201102064254979/40067a6c-5dd9-408c-9ae7-cfaf57d8fd2e.png?ex=69b9ba2b&is=69b868ab&hm=1c6a104063161e987a722b0145c94bd307dbec0bb368d5ad3c4182075ab4af73&";
+const RULES_IMAGE_URL = "https://cdn.discordapp.com/attachments/1482145039525089350/1483201102064254979/40067a6c-5dd9-408c-9ae7-cfaf57d8fd2e.png";
 
 client.once(Events.ClientReady, () => {
   console.log(`Bot online als ${client.user.tag}`);
@@ -84,7 +84,6 @@ client.on('messageCreate', async (message) => {
       });
 
       await message.delete().catch(() => {});
-
     } catch (error) {
       console.error('Fehler beim Senden der Regeln:', error);
     }
