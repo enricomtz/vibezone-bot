@@ -2,6 +2,9 @@ const {
   Client,
   GatewayIntentBits,
   EmbedBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
   Events
 } = require('discord.js');
 
@@ -9,12 +12,15 @@ const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMembers,
     GatewayIntentBits.MessageContent
   ]
 });
 
+// HIER DEINEN TOKEN
 const TOKEN = process.env.DISCORD_TOKEN;
 
+// Hier deinen Bild-Link
 const RULES_IMAGE_URL = "https://cdn.discordapp.com/attachments/1482145039525089350/1483201102064254979/40067a6c-5dd9-408c-9ae7-cfaf57d8fd2e.png?ex=69b9ba2b&is=69b868ab&hm=1c6a104063161e987a722b0145c94bd307dbec0bb368d5ad3c4182075ab4af73&";
 
 client.once(Events.ClientReady, () => {
@@ -56,22 +62,53 @@ client.on('messageCreate', async (message) => {
           `• Warning\n` +
           `• Mute\n` +
           `• Kick\n` +
-          `• Ban`
-        )
-        .setFooter({ text: 'VibeZone Rules' });
+          `• Ban\n\n` +
 
-      if (RULES_IMAGE_URL && RULES_IMAGE_URL !== "HIER_DEIN_BILD_LINK") {
+          `✅ Click the button below to verify.`
+        )
+        .setFooter({ text: 'VibeZone Verification System' });
+
+      if (RULES_IMAGE_URL) {
         embed.setImage(RULES_IMAGE_URL);
       }
 
+      const row = new ActionRowBuilder().addComponents(
+        new ButtonBuilder()
+          .setCustomId('verify_button')
+          .setLabel('Verify')
+          .setEmoji('✅')
+          .setStyle(ButtonStyle.Success)
+      );
+
       await message.channel.send({
-        embeds: [embed]
+        embeds: [embed],
+        components: [row]
       });
 
       await message.delete().catch(() => {});
     } catch (error) {
       console.error('Fehler beim Senden der Regeln:', error);
     }
+  }
+});
+
+client.on('interactionCreate', async (interaction) => {
+  if (!interaction.isButton()) return;
+  if (interaction.customId !== 'verify_button') return;
+
+  try {
+    await interaction.reply({
+      content: '✅ You are now verified. Enjoy the server!',
+      ephemeral: true
+    });
+
+  } catch (error) {
+    console.error('Fehler beim Verifizieren:', error);
+
+    await interaction.reply({
+      content: '❌ Verification failed. Please contact staff.',
+      ephemeral: true
+    }).catch(() => {});
   }
 });
 
