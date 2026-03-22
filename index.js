@@ -17,10 +17,10 @@ const client = new Client({
   ]
 });
 
-// HIER DEINEN TOKEN
+// TOKEN
 const TOKEN = process.env.DISCORD_TOKEN;
 
-// Hier deinen Bild-Link
+// Bild
 const RULES_IMAGE_URL = "https://cdn.discordapp.com/attachments/1482145039525089350/1483201102064254979/40067a6c-5dd9-408c-9ae7-cfaf57d8fd2e.png?ex=69b9ba2b&is=69b868ab&hm=1c6a104063161e987a722b0145c94bd307dbec0bb368d5ad3c4182075ab4af73&";
 
 client.once(Events.ClientReady, () => {
@@ -32,6 +32,7 @@ client.on('messageCreate', async (message) => {
 
   if (message.content === '!rules') {
     try {
+
       const embed = new EmbedBuilder()
         .setTitle('📜 VIBEZONE SERVER RULES')
         .setColor(0x5865F2)
@@ -66,11 +67,8 @@ client.on('messageCreate', async (message) => {
 
           `✅ Click the button below to verify.`
         )
-        .setFooter({ text: 'VibeZone Verification System' });
-
-      if (RULES_IMAGE_URL) {
-        embed.setImage(RULES_IMAGE_URL);
-      }
+        .setFooter({ text: 'VibeZone Verification System' })
+        .setImage(RULES_IMAGE_URL);
 
       const row = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
@@ -86,6 +84,7 @@ client.on('messageCreate', async (message) => {
       });
 
       await message.delete().catch(() => {});
+
     } catch (error) {
       console.error('Fehler beim Senden der Regeln:', error);
     }
@@ -97,8 +96,9 @@ client.on('interactionCreate', async (interaction) => {
   if (interaction.customId !== 'verify_button') return;
 
   try {
+
     await interaction.reply({
-      content: '✅ You are now verified. Enjoy the server!',
+      content: '✅ Verification successful.',
       ephemeral: true
     });
 
