@@ -20,6 +20,9 @@ const client = new Client({
 // HIER DEINEN NEUEN TOKEN EINSETZEN
 const TOKEN = process.env.DISCORD_TOKEN;
 
+// Die Rolle, die User nach dem Klick bekommen sollen
+const VERIFY_ROLE_NAME = "Verified";
+
 // Hier deinen direkten Bild-Link einsetzen
 const RULES_IMAGE_URL = "https://cdn.discordapp.com/attachments/1482145039525089350/1483201102064254979/40067a6c-5dd9-408c-9ae7-cfaf57d8fd2e.png?ex=69b9ba2b&is=69b868ab&hm=1c6a104063161e987a722b0145c94bd307dbec0bb368d5ad3c4182075ab4af73&";
 
@@ -98,7 +101,12 @@ client.on('interactionCreate', async (interaction) => {
 
   try {
     await interaction.reply({
-      content: '✅ Verification successful.',
+  content: '✅ Verification successful.',
+  ephemeral: true
+});
+
+    await interaction.reply({
+      content: '✅ You have been verified and received access to the server.',
       ephemeral: true
     });
   } catch (error) {
