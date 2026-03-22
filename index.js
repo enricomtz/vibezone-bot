@@ -17,14 +17,11 @@ const client = new Client({
   ]
 });
 
-// HIER DEINEN NEUEN TOKEN EINSETZEN
+// TOKEN
 const TOKEN = process.env.DISCORD_TOKEN;
 
-// Die Rolle, die User nach dem Klick bekommen sollen
-const VERIFY_ROLE_NAME = "Verified";
-
-// Hier deinen direkten Bild-Link einsetzen
-const RULES_IMAGE_URL = "https://cdn.discordapp.com/attachments/1482145039525089350/1483201102064254979/40067a6c-5dd9-408c-9ae7-cfaf57d8fd2e.png?ex=69b9ba2b&is=69b868ab&hm=1c6a104063161e987a722b0145c94bd307dbec0bb368d5ad3c4182075ab4af73&";
+// BILD
+const RULES_IMAGE_URL = "https://cdn.discordapp.com/attachments/1482145039525089350/1485248512970195104/40067a6c-5dd9-408c-9ae7-cfaf57d8fd2e.png?ex=69c12cf8&is=69bfdb78&hm=cb802e1138998e59d8edec68e80bf7a9019e2ad8eed23b86265770eb940c5fb9&";
 
 client.once(Events.ClientReady, () => {
   console.log(`Bot online als ${client.user.tag}`);
@@ -69,11 +66,8 @@ client.on('messageCreate', async (message) => {
 
           `✅ Click the button below to verify.`
         )
-        .setFooter({ text: 'VibeZone Verification System' });
-
-      if (RULES_IMAGE_URL !== "HIER_DEIN_BILD_LINK") {
-        embed.setImage(RULES_IMAGE_URL);
-      }
+        .setFooter({ text: 'VibeZone Verification System' })
+        .setImage(RULES_IMAGE_URL);
 
       const row = new ActionRowBuilder().addComponents(
         new ButtonBuilder()
@@ -101,12 +95,7 @@ client.on('interactionCreate', async (interaction) => {
 
   try {
     await interaction.reply({
-  content: '✅ Verification successful.',
-  ephemeral: true
-});
-
-    await interaction.reply({
-      content: '✅ You have been verified and received access to the server.',
+      content: '✅ Verification successful.',
       ephemeral: true
     });
   } catch (error) {
